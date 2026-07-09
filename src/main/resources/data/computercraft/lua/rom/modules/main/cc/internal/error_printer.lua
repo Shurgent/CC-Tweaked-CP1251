@@ -155,7 +155,7 @@ return function(context, message)
 
             local indicator_len = indicator_end - col + 1
             term.setCursorPos(col - start_col + 2, y)
-            term.blit(("\x83"):rep(indicator_len), colour:rep(indicator_len), ("f"):rep(indicator_len))
+            term.blit(("^"):rep(indicator_len), colour:rep(indicator_len), ("f"):rep(indicator_len))
             print()
 
             -- And then print the annotation's message, if present.

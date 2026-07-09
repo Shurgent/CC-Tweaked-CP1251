@@ -8,6 +8,7 @@ package dan200.computercraft.core.apis.handles;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.core.filesystem.TrackingCloseable;
+import dan200.computercraft.shared.util.StringUtil;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
@@ -176,6 +177,11 @@ public class EncodedReadableHandle extends HandleGeneric
     public static BufferedReader openUtf8( ReadableByteChannel channel )
     {
         return open( channel, StandardCharsets.UTF_8 );
+    }
+
+    public static BufferedReader openTerminal( ReadableByteChannel channel )
+    {
+        return open( channel, StringUtil.TERMINAL_CHARSET );
     }
 
     public static BufferedReader open( ReadableByteChannel channel, Charset charset )

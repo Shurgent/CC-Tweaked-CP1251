@@ -10,6 +10,7 @@ import dan200.computercraft.api.lua.IDynamicLuaObject;
 import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaFunction;
+import dan200.computercraft.api.lua.LuaValues;
 import dan200.computercraft.core.asm.LuaMethod;
 import dan200.computercraft.core.asm.ObjectSource;
 import dan200.computercraft.core.computer.TimeoutState;
@@ -187,7 +188,7 @@ public class CobaltLuaMachine implements ILuaMachine
             if( results == null ) return MachineResult.PAUSE;
 
             LuaValue filter = results.first();
-            eventFilter = filter.isString() ? filter.toString() : null;
+            eventFilter = filter.isString() ? toString( filter ) : null;
 
             if( mainRoutine.getStatus().equals( "dead" ) )
             {
@@ -274,7 +275,7 @@ public class CobaltLuaMachine implements ILuaMachine
         if( object == null ) return Constants.NIL;
         if( object instanceof Number num ) return valueOf( num.doubleValue() );
         if( object instanceof Boolean bool ) return valueOf( bool );
-        if( object instanceof String str ) return valueOf( str );
+        if( object instanceof String str ) return valueOf( LuaValues.encodeBytes( str ) );
         if( object instanceof byte[] b )
         {
             return valueOf( Arrays.copyOf( b, b.length ) );
@@ -376,7 +377,7 @@ public class CobaltLuaMachine implements ILuaMachine
             case Constants.TBOOLEAN:
                 return value.toBoolean();
             case Constants.TSTRING:
-                return value.toString();
+                return toString( value );
             case Constants.TTABLE:
             {
                 // Table:
@@ -424,6 +425,17 @@ public class CobaltLuaMachine implements ILuaMachine
             default:
                 return null;
         }
+    }
+
+    private static String toString( LuaValue value )
+    {
+        if( value instanceof LuaBaseString str )
+        {
+            LuaString luaString = str.strvalue();
+            return LuaValues.decode( luaString.bytes, luaString.offset, luaString.length );
+        }
+
+        return value.toString();
     }
 
     static Object[] toObjects( Varargs values )

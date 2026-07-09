@@ -41,6 +41,14 @@ class TextBufferTest
     }
 
     @Test
+    void testWriteCp1251()
+    {
+        TextBuffer textBuffer = new TextBuffer( ' ', 9 );
+        textBuffer.write( "\u041f\u0440\u0438\u0432\u0456\u0442, \u0407" );
+        assertEquals( "\u00cf\u00f0\u00e8\u00e2\u00b3\u00f2, \u00af", textBuffer.toString() );
+    }
+
+    @Test
     void testWriteTextBuffer()
     {
         TextBuffer source = new TextBuffer( "test" );

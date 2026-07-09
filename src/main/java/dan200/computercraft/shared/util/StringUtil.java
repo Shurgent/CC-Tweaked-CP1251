@@ -5,10 +5,15 @@
  */
 package dan200.computercraft.shared.util;
 
+import dan200.computercraft.api.lua.LuaValues;
+
 import javax.annotation.Nullable;
+import java.nio.charset.Charset;
 
 public final class StringUtil
 {
+    public static final Charset TERMINAL_CHARSET = Charset.forName( "windows-1251" );
+
     private StringUtil() {}
 
     public static String normaliseLabel( String label )
@@ -20,7 +25,7 @@ public final class StringUtil
         for( int i = 0; i < length; i++ )
         {
             char c = label.charAt( i );
-            if( (c >= ' ' && c <= '~') || (c >= 161 && c <= 172) || (c >= 174 && c <= 255) )
+            if( isTypableChar( c ) )
             {
                 builder.append( c );
             }
@@ -31,6 +36,31 @@ public final class StringUtil
         }
 
         return builder.toString();
+    }
+
+    public static boolean isTypableChar( char c )
+    {
+        return c >= ' ' && c != 127 && LuaValues.tryEncodeChar( c ) >= 0;
+    }
+
+    public static String normaliseText( String text )
+    {
+        StringBuilder builder = new StringBuilder( text.length() );
+        for( int i = 0; i < text.length(); i++ )
+        {
+            char c = text.charAt( i );
+            builder.append( isTypableChar( c ) ? c : '?' );
+        }
+
+        return builder.toString();
+    }
+
+    public static char toTerminalChar( char c )
+    {
+        if( c <= 255 ) return c;
+
+        int encoded = LuaValues.tryEncodeChar( c );
+        return encoded < 0 ? '?' : (char) encoded;
     }
 
     public static String toString( @Nullable Object value )
