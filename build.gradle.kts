@@ -125,6 +125,7 @@ minecraft {
 mixin {
     add(sourceSets.main.get(), "computercraft.mixins.refmap.json")
     config("computercraft.mixins.json")
+    config("computercraft-cccbridge.mixins.json")
 }
 
 reobf {

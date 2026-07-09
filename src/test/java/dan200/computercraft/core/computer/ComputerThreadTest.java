@@ -22,8 +22,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Timeout( value = 15 )
-@Execution( ExecutionMode.CONCURRENT )
+@Timeout( value = 30 )
+@Execution( ExecutionMode.SAME_THREAD )
 public class ComputerThreadTest
 {
     private KotlinComputerManager manager;

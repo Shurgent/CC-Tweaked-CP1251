@@ -1,0 +1,16 @@
+{
+    "minVersion": "0.8",
+    "required": false,
+    "compatibilityLevel": "JAVA_8",
+    "refmap": "computercraft.mixins.refmap.json",
+    "package": "dan200.computercraft.mixin",
+    "plugin": "dan200.computercraft.shared.integration.cccbridge.CccBridgeMixinPlugin",
+    "mixins": [
+        "cccbridge.CccBridgeMiscMixin",
+        "cccbridge.CccBridgeSourceBlockPeripheralMixin",
+        "cccbridge.CccBridgeTargetBlockPeripheralMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 0
+    }
+}
