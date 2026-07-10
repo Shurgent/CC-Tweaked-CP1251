@@ -33,4 +33,18 @@ class StringUtilTest {
             result
         );
     }
+
+    @Test
+    public void getClipboardString_encodes_cp1251() {
+        var result = StringUtil.getClipboardString("\u041f\u0440\u0438\u0432\u0456\u0442");
+        assertEquals(
+            LuaValues.encode("\u041f\u0440\u0438\u0432\u0456\u0442"),
+            result
+        );
+    }
+
+    @Test
+    public void normaliseLabel_allows_cp1251_cyrillic() {
+        assertEquals("\u041f\u0440\u0438\u0432\u0456\u0442", StringUtil.normaliseLabel("\u041f\u0440\u0438\u0432\u0456\u0442"));
+    }
 }

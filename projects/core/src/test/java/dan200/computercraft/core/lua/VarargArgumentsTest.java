@@ -38,6 +38,15 @@ class VarargArgumentsTest {
     }
 
     @Test
+    public void testGetStringCoercedDecodesCp1251() {
+        var args = VarargArguments.of(ValueFactory.valueOf(new byte[]{
+            (byte) 0xcf, (byte) 0xf0, (byte) 0xe8, (byte) 0xe2, (byte) 0xb3, (byte) 0xf2,
+        }));
+
+        assertEquals("\u041f\u0440\u0438\u0432\u0456\u0442", args.getStringCoerced(0));
+    }
+
+    @Test
     public void testGetAfterEscape() {
         var args = VarargArguments.of(tableWithCustomType());
         args.escapes();

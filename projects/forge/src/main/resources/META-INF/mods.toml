@@ -29,3 +29,6 @@ CC: Tweaked is a fork of ComputerCraft, adding programmable computers, turtles a
     versionRange="[${forgeVersion},48)"
     ordering="NONE"
     side="BOTH"
+
+[[mixins]]
+    config="computercraft-cccbridge.mixins.json"

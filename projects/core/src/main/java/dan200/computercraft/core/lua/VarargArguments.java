@@ -105,7 +105,8 @@ final class VarargArguments implements IArguments {
     public String getStringCoerced(int index) {
         checkAccessible();
         // This doesn't run __tostring, which is _technically_ wrong, but avoids a lot of complexity.
-        return varargs.arg(index + 1).toString();
+        var arg = varargs.arg(index + 1);
+        return arg instanceof LuaString string ? LuaValues.decode(string.toBuffer()) : arg.toString();
     }
 
     @Override

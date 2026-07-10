@@ -35,6 +35,7 @@
     },
     "mixins": [
         "computercraft.fabric.mixins.json",
+        "computercraft-cccbridge.mixins.json",
         {
             "config": "computercraft-client.fabric.mixins.json",
             "environment": "client"

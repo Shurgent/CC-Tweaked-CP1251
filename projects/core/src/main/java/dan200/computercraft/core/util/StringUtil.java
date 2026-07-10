@@ -4,6 +4,7 @@
 
 package dan200.computercraft.core.util;
 
+import dan200.computercraft.api.lua.LuaValues;
 import dan200.computercraft.core.input.ComputerInput;
 
 import java.nio.ByteBuffer;
@@ -22,52 +23,7 @@ public final class StringUtil {
      * it cannot be mapped to CC's charset.
      */
     public static int unicodeToTerminal(int chr) {
-        // ASCII and latin1 map to themselves
-        if (chr == 0 || chr == '\t' || chr == '\n' || chr == '\r' || (chr >= ' ' && chr <= '~') || (chr >= 160 && chr <= 255)) {
-            return chr;
-        }
-
-        // Teletext block mosaics are *fairly* contiguous.
-        if (chr >= 0x1FB00 && chr <= 0x1FB13) return chr + (129 - 0x1fb00);
-        if (chr >= 0x1FB14 && chr <= 0x1FB1D) return chr + (150 - 0x1fb14);
-
-        // Everything else is just a manual lookup. For now, we just use a big switch statement, which we spin into a
-        // separate function to hopefully avoid inlining it here.
-        return unicodeToCraftOsFallback(chr);
-    }
-
-    private static int unicodeToCraftOsFallback(int c) {
-        return switch (c) {
-            case 0x263A -> 1;
-            case 0x263B -> 2;
-            case 0x2665 -> 3;
-            case 0x2666 -> 4;
-            case 0x2663 -> 5;
-            case 0x2660 -> 6;
-            case 0x2022 -> 7;
-            case 0x25D8 -> 8;
-            case 0x2642 -> 11;
-            case 0x2640 -> 12;
-            case 0x266A -> 14;
-            case 0x266B -> 15;
-            case 0x25BA -> 16;
-            case 0x25C4 -> 17;
-            case 0x2195 -> 18;
-            case 0x203C -> 19;
-            case 0x25AC -> 22;
-            case 0x21A8 -> 23;
-            case 0x2191 -> 24;
-            case 0x2193 -> 25;
-            case 0x2192 -> 26;
-            case 0x2190 -> 27;
-            case 0x221F -> 28;
-            case 0x2194 -> 29;
-            case 0x25B2 -> 30;
-            case 0x25BC -> 31;
-            case 0x1FB99 -> 127;
-            case 0x258C -> 149;
-            default -> -1;
-        };
+        return LuaValues.tryEncodeChar(chr);
     }
 
     /**
@@ -93,8 +49,7 @@ public final class StringUtil {
     }
 
     private static boolean isAllowedInLabel(char c) {
-        // Limit to ASCII and latin1, excluding '§' (Minecraft's formatting character).
-        return (c >= ' ' && c <= '~') || (c >= 161 && c <= 255 && c != 167);
+        return c >= ' ' && c != 127 && c != 167 && LuaValues.tryEncodeChar(c) >= 0;
     }
 
     public static String normaliseLabel(String text) {
@@ -105,6 +60,26 @@ public final class StringUtil {
             builder.append(isAllowedInLabel(c) ? c : '?');
         }
         return builder.toString();
+    }
+
+    public static String normaliseText(String text) {
+        var builder = new StringBuilder(text.length());
+        for (var i = 0; i < text.length(); i++) {
+            var c = text.charAt(i);
+            builder.append(isAllowedInText(c) ? c : '?');
+        }
+        return builder.toString();
+    }
+
+    public static char toTerminalChar(char chr) {
+        if (chr <= 255) return chr;
+
+        var terminal = unicodeToTerminal(chr);
+        return terminal < 0 ? '?' : (char) terminal;
+    }
+
+    private static boolean isAllowedInText(char c) {
+        return c >= ' ' && c != 127 && LuaValues.tryEncodeChar(c) >= 0;
     }
 
     /**

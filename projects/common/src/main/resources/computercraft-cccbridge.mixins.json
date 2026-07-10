@@ -1,0 +1,15 @@
+{
+    "required": false,
+    "minVersion": "0.8",
+    "package": "dan200.computercraft.mixin",
+    "compatibilityLevel": "JAVA_17",
+    "plugin": "dan200.computercraft.shared.integration.cccbridge.CccBridgeMixinPlugin",
+    "mixins": [
+        "cccbridge.CccBridgeCharsetManipulatorMixin",
+        "cccbridge.CccBridgeSourceBlockPeripheralMixin",
+        "cccbridge.CccBridgeTargetBlockPeripheralMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

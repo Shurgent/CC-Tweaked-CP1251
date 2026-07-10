@@ -4,6 +4,8 @@
 
 package dan200.computercraft.core.terminal;
 
+import dan200.computercraft.core.util.StringUtil;
+
 import java.nio.ByteBuffer;
 
 public class TextBuffer {
@@ -15,7 +17,8 @@ public class TextBuffer {
     }
 
     public TextBuffer(String text) {
-        this.text = text.toCharArray();
+        this.text = new char[text.length()];
+        write(text);
     }
 
     public int length() {
@@ -32,7 +35,7 @@ public class TextBuffer {
         var end = Math.min(start + text.length(), pos + text.length());
         end = Math.min(end, this.text.length);
         for (var i = start; i < end; i++) {
-            this.text[i] = text.charAt(i - pos);
+            this.text[i] = StringUtil.toTerminalChar(text.charAt(i - pos));
         }
     }
 

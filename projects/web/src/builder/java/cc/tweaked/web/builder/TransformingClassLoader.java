@@ -21,6 +21,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.BiFunction;
@@ -70,12 +71,22 @@ public class TransformingClassLoader extends ClassLoader {
         remappedClasses.put(from, to);
     }
 
-    private @Nullable Path findUnmappedFile(String name) {
+    private Stream<Path> findUnmappedFiles(String name) {
         // For some odd reason, we try to resolve the generated lambda classes. This includes classes called
         // things like <linit>lambda, which is an invalid path on Windows. Detect those, and abort early.
-        if (name.indexOf("<") >= 0) return null;
+        return classpath.stream().flatMap(x -> resolveChild(x, name)).filter(Files::exists);
+    }
 
-        return classpath.stream().map(x -> x.resolve(name)).filter(Files::exists).findFirst().orElse(null);
+    private @Nullable Path findUnmappedFile(String name) {
+        return findUnmappedFiles(name).findFirst().orElse(null);
+    }
+
+    private static Stream<Path> resolveChild(Path root, String name) {
+        try {
+            return Stream.of(root.resolve(name));
+        } catch (InvalidPathException e) {
+            return Stream.empty();
+        }
     }
 
     private @Nullable Path findFile(String name) {
@@ -147,7 +158,7 @@ public class TransformingClassLoader extends ClassLoader {
     protected Enumeration<URL> findResources(String name) {
         var path = remappedResources.get(name);
         return new IteratorEnumeration<>(
-            (path == null ? classpath.stream().map(x -> x.resolve(name)) : Stream.of(path))
+            (path == null ? findUnmappedFiles(name) : Stream.of(path))
                 .filter(Files::exists)
                 .map(this::toURL)
                 .iterator()

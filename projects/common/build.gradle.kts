@@ -37,6 +37,8 @@ dependencies {
     clientApi(clientClasses(project(":common-api")))
 
     compileOnly(libs.bundles.externalMods.common)
+    compileOnly(libs.mixin)
+    compileOnly("org.ow2.asm:asm-tree:${libs.versions.asm.get()}")
     clientCompileOnly(variantOf(libs.emi) { classifier("api") })
 
     annotationProcessorEverywhere(libs.autoService)

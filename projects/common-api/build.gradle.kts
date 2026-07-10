@@ -9,6 +9,11 @@ plugins {
 }
 
 val mcVersion: String by extra
+val javadocFooter = listOf(
+    """<script src="https://cdn.jsdelivr.net/npm/prismjs@v1.29.0/components/prism-core.min.js"></script>""",
+    """<script src="https://cdn.jsdelivr.net/npm/prismjs@v1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>""",
+    """<link href=" https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css " rel="stylesheet">""",
+).joinToString(" ")
 
 java {
     withJavadocJar()
@@ -55,13 +60,7 @@ tasks.javadoc {
         )
 
         addBooleanOption("-allow-script-in-comments", true)
-        bottom(
-            """
-            <script src="https://cdn.jsdelivr.net/npm/prismjs@v1.29.0/components/prism-core.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/prismjs@v1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-            <link href=" https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css " rel="stylesheet">
-            """.trimIndent(),
-        )
+        bottom(javadocFooter)
 
         val snippetSources = listOf(":common", ":fabric", ":forge").flatMap {
             project(it).sourceSets["examples"].allSource.sourceDirectories
@@ -76,12 +75,6 @@ tasks.javadoc {
     options {
         this as StandardJavadocDocletOptions
         addBooleanOption("-allow-script-in-comments", true)
-        bottom(
-            """
-            <script src="https://cdn.jsdelivr.net/npm/prismjs@v1.29.0/components/prism-core.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/prismjs@v1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-            <link href=" https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css " rel="stylesheet">
-            """.trimIndent(),
-        )
+        bottom(javadocFooter)
     }
 }

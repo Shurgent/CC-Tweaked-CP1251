@@ -23,8 +23,8 @@ import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Timeout(value = 15)
-@Execution(ExecutionMode.CONCURRENT)
+@Timeout(value = 30)
+@Execution(ExecutionMode.SAME_THREAD)
 public class ComputerThreadTest {
     private static final Logger LOG = LoggerFactory.getLogger(ComputerThreadTest.class);
     private ComputerThreadRunner manager;

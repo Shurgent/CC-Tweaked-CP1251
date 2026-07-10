@@ -8,6 +8,7 @@ import dan200.computercraft.api.lua.IDynamicLuaObject;
 import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaFunction;
+import dan200.computercraft.api.lua.LuaValues;
 import dan200.computercraft.core.CoreConfig;
 import dan200.computercraft.core.Logging;
 import dan200.computercraft.core.computer.TimeoutState;
@@ -133,7 +134,7 @@ public class CobaltLuaMachine implements ILuaMachine {
             if (results == null) return MachineResult.PAUSE;
 
             var filter = results.first();
-            eventFilter = filter.isString() ? filter.toString() : null;
+            eventFilter = filter.isString() ? toString(filter) : null;
 
             if (!mainRoutine.isAlive()) {
                 close();
@@ -178,7 +179,7 @@ public class CobaltLuaMachine implements ILuaMachine {
         if (object == null) return Constants.NIL;
         if (object instanceof Number num) return ValueFactory.valueOf(num.doubleValue());
         if (object instanceof Boolean bool) return ValueFactory.valueOf(bool);
-        if (object instanceof String str) return ValueFactory.valueOf(str);
+        if (object instanceof String str) return ValueFactory.valueOf(LuaValues.encodeBytes(str));
         if (object instanceof byte[] b) return ValueFactory.valueOf(Arrays.copyOf(b, b.length));
         if (object instanceof ByteBuffer b) {
             var bytes = new byte[b.remaining()];
@@ -271,7 +272,7 @@ public class CobaltLuaMachine implements ILuaMachine {
             case Constants.TNIL -> null;
             case Constants.TINT, Constants.TNUMBER -> value.toDouble();
             case Constants.TBOOLEAN -> value.toBoolean();
-            case Constants.TSTRING -> value.toString();
+            case Constants.TSTRING -> toString(value);
             case Constants.TTABLE -> {
                 // Table:
                 // Start remembering stuff
@@ -316,6 +317,10 @@ public class CobaltLuaMachine implements ILuaMachine {
         var objects = new Object[count];
         for (var i = 0; i < count; i++) objects[i] = toObject(values.arg(i + 1), null);
         return objects;
+    }
+
+    private static String toString(LuaValue value) {
+        return value instanceof LuaString string ? LuaValues.decode(string.toBuffer()) : value.toString();
     }
 
     private static final class HardAbortError extends Error {
