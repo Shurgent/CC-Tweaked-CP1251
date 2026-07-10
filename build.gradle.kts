@@ -125,6 +125,7 @@ minecraft {
 mixin {
     add(sourceSets.main.get(), "computercraft.mixins.refmap.json")
     config("computercraft.mixins.json")
+    config("computercraft-cccbridge.mixins.json")
 }
 
 reobf {
@@ -320,6 +321,7 @@ val docWebsite by tasks.registering(Copy::class) {
 
 tasks.test {
     systemProperty("cct.test-files", buildDir.resolve("tmp/testFiles").absolutePath)
+    systemProperty("user.timezone", "UTC")
 }
 
 val lintLua by tasks.registering(IlluaminateExec::class) {

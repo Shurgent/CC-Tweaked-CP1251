@@ -11,6 +11,7 @@ import dan200.computercraft.client.render.RenderTypes;
 import dan200.computercraft.client.render.text.FixedWidthFontRenderer;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.shared.computer.core.InputHandler;
+import dan200.computercraft.shared.util.StringUtil;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -65,7 +66,7 @@ public class WidgetTerminal extends AbstractWidget
     @Override
     public boolean charTyped( char ch, int modifiers )
     {
-        if( ch >= 32 && ch <= 126 || ch >= 160 && ch <= 255 ) // printable chars in byte range
+        if( StringUtil.isTypableChar( ch ) )
         {
             // Queue the "char" event
             computer.queueEvent( "char", new Object[] { Character.toString( ch ) } );
@@ -114,7 +115,7 @@ public class WidgetTerminal extends AbstractWidget
                         }
 
                         // Filter the string
-                        clipboard = SharedConstants.filterText( clipboard );
+                        clipboard = StringUtil.normaliseText( SharedConstants.filterText( clipboard ) );
                         if( !clipboard.isEmpty() )
                         {
                             // Clip to 512 characters and queue the event

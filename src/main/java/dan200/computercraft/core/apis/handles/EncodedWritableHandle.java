@@ -104,6 +104,11 @@ public class EncodedWritableHandle extends HandleGeneric
         return open( channel, StandardCharsets.UTF_8 );
     }
 
+    public static BufferedWriter openTerminal( WritableByteChannel channel )
+    {
+        return open( channel, StringUtil.TERMINAL_CHARSET );
+    }
+
     public static BufferedWriter open( WritableByteChannel channel, Charset charset )
     {
         // Create a charset encoder with the same properties as StreamEncoder does for

@@ -419,19 +419,19 @@ public class FSAPI implements ILuaAPI
                 case "r":
                 {
                     // Open the file for reading, then create a wrapper around the reader
-                    FileSystemWrapper<BufferedReader> reader = fileSystem.openForRead( path, EncodedReadableHandle::openUtf8 );
+                    FileSystemWrapper<BufferedReader> reader = fileSystem.openForRead( path, EncodedReadableHandle::openTerminal );
                     return new Object[] { new EncodedReadableHandle( reader.get(), reader ) };
                 }
                 case "w":
                 {
                     // Open the file for writing, then create a wrapper around the writer
-                    FileSystemWrapper<BufferedWriter> writer = fileSystem.openForWrite( path, false, EncodedWritableHandle::openUtf8 );
+                    FileSystemWrapper<BufferedWriter> writer = fileSystem.openForWrite( path, false, EncodedWritableHandle::openTerminal );
                     return new Object[] { new EncodedWritableHandle( writer.get(), writer ) };
                 }
                 case "a":
                 {
                     // Open the file for appending, then create a wrapper around the writer
-                    FileSystemWrapper<BufferedWriter> writer = fileSystem.openForWrite( path, true, EncodedWritableHandle::openUtf8 );
+                    FileSystemWrapper<BufferedWriter> writer = fileSystem.openForWrite( path, true, EncodedWritableHandle::openTerminal );
                     return new Object[] { new EncodedWritableHandle( writer.get(), writer ) };
                 }
                 case "rb":

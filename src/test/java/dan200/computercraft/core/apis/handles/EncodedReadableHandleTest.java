@@ -60,6 +60,15 @@ public class EncodedReadableHandleTest
         assertEquals( 1000, wrapper.<String>callOf( "read", 11000 ).length() );
     }
 
+    @Test
+    public void testReadCp1251() throws LuaException
+    {
+        ObjectWrapper wrapper = new ObjectWrapper( new EncodedReadableHandle( EncodedReadableHandle.openTerminal(
+            new ArrayByteChannel( new byte[] { (byte) 0xcf, (byte) 0xf0, (byte) 0xe8, (byte) 0xe2, (byte) 0xe5, (byte) 0xf2 } )
+        ) ) );
+        assertEquals( "\u041f\u0440\u0438\u0432\u0435\u0442", wrapper.callOf( "readAll" ) );
+    }
+
     private static ObjectWrapper fromLength( int length )
     {
         char[] input = new char[length];
